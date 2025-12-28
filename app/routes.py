@@ -11,6 +11,52 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 employee_bp = Blueprint('employees', __name__, url_prefix='/api/employees')
 payroll_bp = Blueprint('payroll', __name__, url_prefix='/api/payroll')
 
+# ==================== Auth Routes ====================
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    """User login endpoint"""
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        
+        # This is a simplified example - in production, use proper password hashing
+        # and database queries to verify credentials
+        if not email or not password:
+            return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
+        
+        # TODO: Add actual authentication logic with password verification
+        return jsonify({
+            'status': 'success',
+            'message': 'Login successful',
+            'access_token': 'dummy_token'
+        }), 200
+    except Exception as err:
+        return jsonify({'status': 'error', 'message': str(err)}), 500
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    """User registration endpoint"""
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        
+        if not all([email, password, first_name, last_name]):
+            return jsonify({'status': 'error', 'message': 'All fields are required'}), 400
+        
+        # TODO: Add validation and user creation logic
+        return jsonify({
+            'status': 'success',
+            'message': 'User registered successfully'
+        }), 201
+    except Exception as err:
+        return jsonify({'status': 'error', 'message': str(err)}), 500
+
+
+
 # ==================== Employee Routes ====================
 
 @employee_bp.route('/', methods=['GET'])
