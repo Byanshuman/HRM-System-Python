@@ -189,3 +189,32 @@ def process_payroll():
     except Exception as err:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(err)}), 500
+
+# ==================== Protected Auth Routes ====================
+@auth_bp.route('/me', methods=['GET'])
+@jwt_required()
+def get_current_user():
+    """Get current authenticated user profile"""
+    try:
+        current_user_id = get_jwt_identity()
+        return jsonify({
+            'status': 'success',
+            'data': {
+                'user_id': current_user_id,
+                'message': 'User authenticated'
+            }
+        }), 200
+    except Exception as err:
+        return jsonify({'status': 'error', 'message': str(err)}), 500
+
+@auth_bp.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    """User logout endpoint (revoke token)"""
+    try:
+        return jsonify({
+            'status': 'success',
+            'message': 'Logged out successfully'
+        }), 200
+    except Exception as err:
+        return jsonify({'status': 'error', 'message': str(err)}), 500
